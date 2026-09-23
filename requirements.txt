@@ -1,0 +1,15 @@
+# Dependencies for the CSE5BCC Assessment 1 (Option A) measurement study.
+#
+# Pinned to the versions the stored results in results/ were produced with, so the
+# figures in the README can be reproduced rather than merely re-run.
+#
+#   flask       provided/blockchain_assessment.py and node.py serve the chain over HTTP
+#   requests    harness.py and probe_verify.py drive the nodes over that HTTP interface
+#   matplotlib  charts_for_slides.py, for every figure in charts/
+#   numpy       charts_for_slides.py (matplotlib's array backend)
+#   pillow      make_screenshots.py, which crops the terminal captures
+flask==3.1.3
+requests==2.34.2
+matplotlib==3.11.2
+numpy==2.5.3
+pillow==12.3.0
