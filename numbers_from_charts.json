@@ -1,0 +1,131 @@
+{
+  "ladder": {
+    "ratios": [
+      0.998,
+      1.009,
+      1.065,
+      1.096
+    ],
+    "rate_MHs": [
+      1.099,
+      1.214,
+      1.21,
+      1.26
+    ],
+    "med3_expected_gap": [
+      1.2,
+      1.2,
+      1.2,
+      1.2
+    ],
+    "step_factor_wall": 3283.8,
+    "step_factor_attempts": 4500.0,
+    "prescribed_median3_s": 0.2403,
+    "prescribed_next_block_s": 1.5543,
+    "prescribed_spread_x": 6.468
+  },
+  "collapse": {
+    "p5_p95_span_x": {
+      "3": 57.4,
+      "4": 53.2,
+      "5": 37.7,
+      "6": 22.1
+    },
+    "theory_span_for_exponential_x": 58.4,
+    "span_null_median_x": {
+      "3": 56.3,
+      "4": 56.3,
+      "5": 55.0,
+      "6": 35.4
+    },
+    "span_null_central_90_x": {
+      "3": [
+        37.5,
+        88.9
+      ],
+      "4": [
+        37.5,
+        88.9
+      ],
+      "5": [
+        30.0,
+        112.7
+      ],
+      "6": [
+        11.8,
+        172.8
+      ]
+    },
+    "span_observed_percentile": {
+      "3": 53.0,
+      "4": 41.4,
+      "5": 16.2,
+      "6": 26.1
+    },
+    "ks_D": {
+      "3": 0.0382,
+      "4": 0.0371,
+      "5": 0.0553,
+      "6": 0.1788
+    },
+    "ks_p": {
+      "3": 0.581,
+      "4": 0.622,
+      "5": 0.6559,
+      "6": 0.1926
+    },
+    "ks_rejected_at_5pct": []
+  },
+  "estimator": {
+    "k": 5,
+    "n": 127,
+    "truth": 1048576,
+    "sample_mean_ratio": 1.065,
+    "e_med3_theory": 0.8333,
+    "one_block_over_mean": 1.062,
+    "med3_over_mean": 0.8875,
+    "med3_exact_enumeration": 0.8827,
+    "med3_over_sample_mean": 0.8333,
+    "shortfall_vs_mean_of_3_pct": 16.7,
+    "mean_of_3_over_mean": 1.0651,
+    "within50_single": 0.386
+  },
+  "payload": {
+    "rate_0tx": 2208328,
+    "rate_10000tx": 336,
+    "collapse_x": 6580,
+    "bytes_0": 68,
+    "bytes_10000": 586740,
+    "frac_0": 0.3152,
+    "frac_max": 0.9619,
+    "http_1tx": 919273,
+    "http_1000tx": 3269
+  },
+  "fork": {
+    "steps": 13,
+    "tie_syncs": 4,
+    "wasted_attempts": 19755,
+    "wasted_blocks": 2,
+    "b_total_attempts": 19755,
+    "a_total_attempts": 78152
+  },
+  "provenance": {
+    "total_measured_blocks": 750,
+    "blocks_per_difficulty": {
+      "3": 300,
+      "4": 300,
+      "5": 127,
+      "6": 23
+    },
+    "http_overhead_ms": [
+      0.83,
+      1.57
+    ],
+    "sync_times_ms": [
+      5.0,
+      4.8,
+      4.1
+    ],
+    "prescribed_rows": 7
+  }
+}

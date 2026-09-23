@@ -1,0 +1,14 @@
+step,note,agree,A_length,A_fp,B_length,B_fp,C_length,C_fp
+"start (3 nodes, genesis only)",,False,1,9e5d583ea1ab,1,9aca150d50e8,1,d81eebe29327
+"A mines 2 blocks, B and C idle",A ahead,False,3,97b1c0d60fa0,1,9aca150d50e8,1,d81eebe29327
+B mines 1 block (B has its own fork),"B=2, A=3",False,3,97b1c0d60fa0,2,e584b6f85563,1,d81eebe29327
+B syncs,B should adopt A's longer chain,False,3,97b1c0d60fa0,3,97b1c0d60fa0,1,d81eebe29327
+C syncs,all three agree,True,3,97b1c0d60fa0,3,97b1c0d60fa0,3,97b1c0d60fa0
+B and C each mine 1 block independently,equal length -> tie,False,3,97b1c0d60fa0,4,c20fe5db9e27,4,c534009bb692
+B syncs (B=4 C=4: not strictly longer),expect NO adoption,False,3,97b1c0d60fa0,4,c20fe5db9e27,4,c534009bb692
+C syncs (C=4 B=4: not strictly longer),expect NO adoption,False,3,97b1c0d60fa0,4,c20fe5db9e27,4,c534009bb692
+B syncs again,expect still no adoption,False,3,97b1c0d60fa0,4,c20fe5db9e27,4,c534009bb692
+C syncs again,expect still no adoption,False,3,97b1c0d60fa0,4,c20fe5db9e27,4,c534009bb692
+"C mines one more block (C=5, B=4)",now strictly longer,False,3,97b1c0d60fa0,4,c20fe5db9e27,5,4b425cc10428
+B syncs,B must now adopt C's chain and lose its own block,False,3,97b1c0d60fa0,5,4b425cc10428,5,4b425cc10428
+"A mines, B syncs",B chases the longer chain,False,4,f9e796bdddf8,5,4b425cc10428,5,4b425cc10428

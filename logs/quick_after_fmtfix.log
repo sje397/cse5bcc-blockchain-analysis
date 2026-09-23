@@ -1,0 +1,52 @@
+provided program: fixed target '0000', verified from source
+
+=== experiment: microbenchmark (cost per attempt) ===
+  format check: 3 nonces mined to meet '0000' under the harness's bytes -> provided valid_proof accepted all 3; 3 nonces that ONLY the wrong (JSON) format meets -> provided rejected all 3
+       0 tx (       68 B):    0.479 us/attempt  (   2088864/s)  serialise  32.4%
+       1 tx (      116 B):    0.791 us/attempt  (   1264536/s)  serialise  60.8%
+      10 tx (      567 B):    3.444 us/attempt  (    290350/s)  serialise  88.4%
+     100 tx (     5338 B):   27.600 us/attempt  (     36232/s)  serialise  93.9%
+     500 tx (    27738 B):  142.848 us/attempt  (      7000/s)  serialise  93.8%
+    1000 tx (    55739 B):  300.048 us/attempt  (      3333/s)  serialise  95.1%
+    2500 tx (   144239 B):  781.430 us/attempt  (      1280/s)  serialise  91.9%
+    5000 tx (   291739 B): 1527.991 us/attempt  (       654/s)  serialise  93.3%
+   10000 tx (   586740 B): 2983.461 us/attempt  (       335/s)  serialise  93.6%
+  wrote results/micro_payload.csv (9 rows)
+
+=== experiment: fork behaviour ===
+  start (3 nodes, genesis only)              A=1 B=1 C=1  agree=False
+  A mines 2 blocks, B and C idle             A=3 B=1 C=1  agree=False
+  B mines 1 block (B has its own fork)       A=3 B=2 C=1  agree=False
+  B syncs                                    A=3 B=3 C=1  agree=False
+  C syncs                                    A=3 B=3 C=3  agree=True
+  B and C each mine 1 block independently    A=3 B=4 C=4  agree=False
+  B syncs (B=4 C=4: not strictly longer)     A=3 B=4 C=4  agree=False
+  C syncs (C=4 B=4: not strictly longer)     A=3 B=4 C=4  agree=False
+  B syncs again                              A=3 B=4 C=4  agree=False
+  C syncs again                              A=3 B=4 C=4  agree=False
+  C mines one more block (C=5, B=4)          A=3 B=4 C=5  agree=False
+  B syncs                                    A=3 B=5 C=5  agree=False
+  A mines, B syncs                           A=4 B=5 C=5  agree=False
+  wrote results/fork_events.json
+  wrote results/fork_events.csv (13 steps)
+
+=== experiment: wasted work under divergence ===
+  A mined 3 (attempts 72886), B mined 2 (attempts 99010)
+  after B syncs: B's chain length 3 -> 4, B's own mined blocks surviving = -1/2
+  wasted attempts (B's abandoned branch): 99010
+  wrote results/wasted_work.json
+Traceback (most recent call last):
+  File "/Users/sje/repo/lex/user-sandboxes/e4b3739a-5475-4abc-920c-317e36805cbb/blockchain-assessment/harness.py", line 1145, in <module>
+    main()
+  File "/Users/sje/repo/lex/user-sandboxes/e4b3739a-5475-4abc-920c-317e36805cbb/blockchain-assessment/harness.py", line 1139, in main
+    EXPERIMENTS[name]()
+  File "/Users/sje/repo/lex/user-sandboxes/e4b3739a-5475-4abc-920c-317e36805cbb/blockchain-assessment/harness.py", line 1053, in exp_convergence
+    write_csv(RESULTS / "wasted_work.csv", rows)
+  File "/Users/sje/repo/lex/user-sandboxes/e4b3739a-5475-4abc-920c-317e36805cbb/blockchain-assessment/harness.py", line 491, in write_csv
+    w.writerows(rows)
+  File "/opt/homebrew/Cellar/python@3.12/3.12.13_4/Frameworks/Python.framework/Versions/3.12/lib/python3.12/csv.py", line 167, in writerows
+    return self.writer.writerows(map(self._dict_to_list, rowdicts))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.12/3.12.13_4/Frameworks/Python.framework/Versions/3.12/lib/python3.12/csv.py", line 159, in _dict_to_list
+    raise ValueError("dict contains fields not in fieldnames: "
+ValueError: dict contains fields not in fieldnames: 'b_blocks_destroyed', 'b_blocks_surviving', 'b_final_length'

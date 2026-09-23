@@ -1,0 +1,88 @@
+{
+  "generated": "2026-09-23T16:23:45",
+  "rows": [
+    {
+      "phase": "1",
+      "target": "0000",
+      "program": "blockchain_assessment.py",
+      "nodes": 1,
+      "transaction_time_s": 0.0001,
+      "mining_time_s": 0.0514,
+      "mining_time_second_block_s": 0.0502,
+      "sync_time_s": null,
+      "note": "mining time = median of 3 blocks; genesis mined at import"
+    },
+    {
+      "phase": "2",
+      "target": "0000",
+      "program": "blockchain_assessment.py",
+      "nodes": 3,
+      "transaction_time_s": null,
+      "mining_time_s": null,
+      "sync_time_s": 0.005,
+      "sync_time_s_second": 0.0069,
+      "sync_time_s_third": 0.005,
+      "all_identical": true,
+      "note": "sync (s) = the three syncs in walkthrough order; a fourth, C catching up to B, is shown in the transcript"
+    },
+    {
+      "phase": "1",
+      "target": "0000",
+      "program": "node.py",
+      "nodes": 1,
+      "transaction_time_s": 0.0001,
+      "mining_time_s": 0.0304,
+      "mining_time_second_block_s": 0.0098,
+      "sync_time_s": null,
+      "note": "mining time = median of 3 blocks; genesis mined at import"
+    },
+    {
+      "phase": "1",
+      "target": "000",
+      "program": "node.py",
+      "nodes": 1,
+      "transaction_time_s": 0.0,
+      "mining_time_s": 0.0011,
+      "mining_time_second_block_s": 0.0006,
+      "sync_time_s": null,
+      "note": "mining time = median of 3 blocks; genesis mined at import"
+    },
+    {
+      "phase": "2",
+      "target": "000",
+      "program": "node.py",
+      "nodes": 3,
+      "transaction_time_s": null,
+      "mining_time_s": null,
+      "sync_time_s": 0.0048,
+      "sync_time_s_second": 0.0057,
+      "sync_time_s_third": 0.0051,
+      "all_identical": true,
+      "note": "sync (s) = the three syncs in walkthrough order; a fourth, C catching up to B, is shown in the transcript"
+    },
+    {
+      "phase": "1",
+      "target": "00000",
+      "program": "node.py",
+      "nodes": 1,
+      "transaction_time_s": 0.0,
+      "mining_time_s": 0.2403,
+      "mining_time_second_block_s": 1.5543,
+      "sync_time_s": null,
+      "note": "mining time = median of 3 blocks; genesis mined at import"
+    },
+    {
+      "phase": "2",
+      "target": "00000",
+      "program": "node.py",
+      "nodes": 3,
+      "transaction_time_s": null,
+      "mining_time_s": null,
+      "sync_time_s": 0.0041,
+      "sync_time_s_second": 0.0071,
+      "sync_time_s_third": 0.0061,
+      "all_identical": true,
+      "note": "sync (s) = the three syncs in walkthrough order; a fourth, C catching up to B, is shown in the transcript"
+    }
+  ]
+}

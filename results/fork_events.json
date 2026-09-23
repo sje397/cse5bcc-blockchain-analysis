@@ -1,0 +1,223 @@
+[
+  {
+    "step": "start (3 nodes, genesis only)",
+    "note": "",
+    "agree": false,
+    "A": {
+      "length": 1,
+      "fp": "9e5d583ea1ab"
+    },
+    "B": {
+      "length": 1,
+      "fp": "9aca150d50e8"
+    },
+    "C": {
+      "length": 1,
+      "fp": "d81eebe29327"
+    }
+  },
+  {
+    "step": "A mines 2 blocks, B and C idle",
+    "note": "A ahead",
+    "agree": false,
+    "A": {
+      "length": 3,
+      "fp": "97b1c0d60fa0"
+    },
+    "B": {
+      "length": 1,
+      "fp": "9aca150d50e8"
+    },
+    "C": {
+      "length": 1,
+      "fp": "d81eebe29327"
+    }
+  },
+  {
+    "step": "B mines 1 block (B has its own fork)",
+    "note": "B=2, A=3",
+    "agree": false,
+    "A": {
+      "length": 3,
+      "fp": "97b1c0d60fa0"
+    },
+    "B": {
+      "length": 2,
+      "fp": "e584b6f85563"
+    },
+    "C": {
+      "length": 1,
+      "fp": "d81eebe29327"
+    }
+  },
+  {
+    "step": "B syncs",
+    "note": "B should adopt A's longer chain",
+    "agree": false,
+    "A": {
+      "length": 3,
+      "fp": "97b1c0d60fa0"
+    },
+    "B": {
+      "length": 3,
+      "fp": "97b1c0d60fa0"
+    },
+    "C": {
+      "length": 1,
+      "fp": "d81eebe29327"
+    }
+  },
+  {
+    "step": "C syncs",
+    "note": "all three agree",
+    "agree": true,
+    "A": {
+      "length": 3,
+      "fp": "97b1c0d60fa0"
+    },
+    "B": {
+      "length": 3,
+      "fp": "97b1c0d60fa0"
+    },
+    "C": {
+      "length": 3,
+      "fp": "97b1c0d60fa0"
+    }
+  },
+  {
+    "step": "B and C each mine 1 block independently",
+    "note": "equal length -> tie",
+    "agree": false,
+    "A": {
+      "length": 3,
+      "fp": "97b1c0d60fa0"
+    },
+    "B": {
+      "length": 4,
+      "fp": "c20fe5db9e27"
+    },
+    "C": {
+      "length": 4,
+      "fp": "c534009bb692"
+    }
+  },
+  {
+    "step": "B syncs (B=4 C=4: not strictly longer)",
+    "note": "expect NO adoption",
+    "agree": false,
+    "A": {
+      "length": 3,
+      "fp": "97b1c0d60fa0"
+    },
+    "B": {
+      "length": 4,
+      "fp": "c20fe5db9e27"
+    },
+    "C": {
+      "length": 4,
+      "fp": "c534009bb692"
+    }
+  },
+  {
+    "step": "C syncs (C=4 B=4: not strictly longer)",
+    "note": "expect NO adoption",
+    "agree": false,
+    "A": {
+      "length": 3,
+      "fp": "97b1c0d60fa0"
+    },
+    "B": {
+      "length": 4,
+      "fp": "c20fe5db9e27"
+    },
+    "C": {
+      "length": 4,
+      "fp": "c534009bb692"
+    }
+  },
+  {
+    "step": "B syncs again",
+    "note": "expect still no adoption",
+    "agree": false,
+    "A": {
+      "length": 3,
+      "fp": "97b1c0d60fa0"
+    },
+    "B": {
+      "length": 4,
+      "fp": "c20fe5db9e27"
+    },
+    "C": {
+      "length": 4,
+      "fp": "c534009bb692"
+    }
+  },
+  {
+    "step": "C syncs again",
+    "note": "expect still no adoption",
+    "agree": false,
+    "A": {
+      "length": 3,
+      "fp": "97b1c0d60fa0"
+    },
+    "B": {
+      "length": 4,
+      "fp": "c20fe5db9e27"
+    },
+    "C": {
+      "length": 4,
+      "fp": "c534009bb692"
+    }
+  },
+  {
+    "step": "C mines one more block (C=5, B=4)",
+    "note": "now strictly longer",
+    "agree": false,
+    "A": {
+      "length": 3,
+      "fp": "97b1c0d60fa0"
+    },
+    "B": {
+      "length": 4,
+      "fp": "c20fe5db9e27"
+    },
+    "C": {
+      "length": 5,
+      "fp": "4b425cc10428"
+    }
+  },
+  {
+    "step": "B syncs",
+    "note": "B must now adopt C's chain and lose its own block",
+    "agree": false,
+    "A": {
+      "length": 3,
+      "fp": "97b1c0d60fa0"
+    },
+    "B": {
+      "length": 5,
+      "fp": "4b425cc10428"
+    },
+    "C": {
+      "length": 5,
+      "fp": "4b425cc10428"
+    }
+  },
+  {
+    "step": "A mines, B syncs",
+    "note": "B chases the longer chain",
+    "agree": false,
+    "A": {
+      "length": 4,
+      "fp": "f9e796bdddf8"
+    },
+    "B": {
+      "length": 5,
+      "fp": "4b425cc10428"
+    },
+    "C": {
+      "length": 5,
+      "fp": "4b425cc10428"
+    }
+  }
+]

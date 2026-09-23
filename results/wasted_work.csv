@@ -1,0 +1,4 @@
+node,blocks_mined,attempts,own_blocks_in_final_chain,blocks_destroyed,final_length,genesis_survived_sync,a_blocks_present_in_adopted,wasted_attempts
+A,3,78152,3,,,,,
+B,2,19755,0,2,4,False,3,
+TOTAL,5,97907,,,,,,19755

@@ -1,0 +1,8 @@
+round,miner,A_length,B_length,agreed
+0,A,2,1,False
+1,B,2,2,False
+2,A,3,2,False
+3,B,3,3,False
+4,A,4,3,False
+5,B,4,4,False
+settled,,4,4,False

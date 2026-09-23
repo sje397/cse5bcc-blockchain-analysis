@@ -1,0 +1,128 @@
+provided program: fixed target '0000', verified from source
+
+=== experiment: difficulty ===
+  difficulty 3: startup 0.23s, warm-up mean 2.4ms -> 300 reps
+    25/300
+    50/300
+    75/300
+    100/300
+    125/300
+    150/300
+    175/300
+    200/300
+    225/300
+    250/300
+    275/300
+    300/300
+    mean wall 0.0044s, mean attempts 4086, rate 1099036/s
+  difficulty 4: startup 0.19s, warm-up mean 25.8ms -> 300 reps
+    25/300
+    50/300
+    75/300
+    100/300
+    125/300
+    150/300
+    175/300
+    200/300
+    225/300
+    250/300
+    275/300
+    300/300
+    mean wall 0.0555s, mean attempts 66149, rate 1214394/s
+  difficulty 5: startup 0.44s, warm-up mean 1407.5ms -> 127 reps
+    25/127
+    50/127
+    75/127
+    100/127
+    125/127
+    mean wall 0.9267s, mean attempts 1116839, rate 1209622/s
+  difficulty 6: startup 9.90s, warm-up mean 7666.9ms -> 23 reps
+    mean wall 14.5375s, mean attempts 18387442, rate 1260222/s
+  wrote results/difficulty_trials.csv (750 rows, 12 cols)
+  wrote results/difficulty_summary.csv (4 rows, 10 cols)
+  wrote results/difficulty_summary.json
+
+=== experiment: microbenchmark (cost per attempt) ===
+  format check: 3 nonces mined to meet '0000' under the harness's bytes -> provided valid_proof accepted all 3; 3 nonces that ONLY the wrong (JSON) format meets -> provided rejected all 3
+       0 tx (       68 B):    0.453 us/attempt  (   2208328/s)  serialise  31.5%
+       1 tx (      116 B):    0.790 us/attempt  (   1265853/s)  serialise  56.2%
+      10 tx (      567 B):    3.510 us/attempt  (    284900/s)  serialise  84.3%
+     100 tx (     5338 B):   27.846 us/attempt  (     35912/s)  serialise  90.9%
+     500 tx (    27738 B):  151.416 us/attempt  (      6604/s)  serialise  96.2%
+    1000 tx (    55739 B):  296.715 us/attempt  (      3370/s)  serialise  92.5%
+    2500 tx (   144239 B):  737.228 us/attempt  (      1356/s)  serialise  94.1%
+    5000 tx (   291739 B): 1464.764 us/attempt  (       683/s)  serialise  95.3%
+   10000 tx (   586740 B): 2980.015 us/attempt  (       336/s)  serialise  92.8%
+  wrote results/micro_payload.csv (9 rows, 6 cols)
+
+=== experiment: payload (end-to-end) ===
+      1 extra tx: mean wall 0.0875s, rate 919273/s
+     10 extra tx: mean wall 0.1939s, rate 271103/s
+    100 extra tx: mean wall 1.2198s, rate 32711/s
+   1000 extra tx: mean wall 37.1804s, rate 3269/s
+  wrote results/payload_http.csv (20 rows, 13 cols)
+
+=== experiment: sync (empty blocks) ===
+     5 blocks (  0.001 MB): wall     7.32 ms, server     6.20 ms, agree=True
+    10 blocks (  0.003 MB): wall     5.80 ms, server     4.90 ms, agree=True
+    25 blocks (  0.007 MB): wall     5.64 ms, server     4.70 ms, agree=True
+    50 blocks (  0.013 MB): wall     6.37 ms, server     5.20 ms, agree=True
+   100 blocks (  0.026 MB): wall     6.93 ms, server     5.60 ms, agree=True
+   200 blocks (  0.051 MB): wall     7.08 ms, server     5.70 ms, agree=True
+   400 blocks (  0.102 MB): wall     9.64 ms, server     7.90 ms, agree=True
+  wrote results/sync_empty.csv (7 rows, 9 cols)
+
+=== experiment: sync (100tx blocks) ===
+     5 blocks (  0.028 MB): wall     7.21 ms, server     6.00 ms, agree=True
+    10 blocks (  0.055 MB): wall     8.25 ms, server     6.70 ms, agree=True
+    25 blocks (  0.138 MB): wall    11.70 ms, server     9.70 ms, agree=True
+    50 blocks (  0.277 MB): wall    16.28 ms, server    12.90 ms, agree=True
+   100 blocks (  0.553 MB): wall    22.08 ms, server    17.80 ms, agree=True
+   200 blocks (  1.106 MB): wall    45.11 ms, server    36.20 ms, agree=True
+  wrote results/sync_100tx.csv (6 rows, 9 cols)
+
+=== experiment: fork behaviour ===
+  start (3 nodes, genesis only)              A=1 B=1 C=1  agree=False
+  A mines 2 blocks, B and C idle             A=3 B=1 C=1  agree=False
+  B mines 1 block (B has its own fork)       A=3 B=2 C=1  agree=False
+  B syncs                                    A=3 B=3 C=1  agree=False
+  C syncs                                    A=3 B=3 C=3  agree=True
+  B and C each mine 1 block independently    A=3 B=4 C=4  agree=False
+  B syncs (B=4 C=4: not strictly longer)     A=3 B=4 C=4  agree=False
+  C syncs (C=4 B=4: not strictly longer)     A=3 B=4 C=4  agree=False
+  B syncs again                              A=3 B=4 C=4  agree=False
+  C syncs again                              A=3 B=4 C=4  agree=False
+  C mines one more block (C=5, B=4)          A=3 B=4 C=5  agree=False
+  B syncs                                    A=3 B=5 C=5  agree=False
+  A mines, B syncs                           A=4 B=5 C=5  agree=False
+  wrote results/fork_events.json
+  wrote results/fork_events.csv (13 steps)
+
+=== experiment: wasted work under divergence ===
+  A mined 3 (attempts 78152), B mined 2 (attempts 19755)
+  after B syncs: B's chain length 3 -> 4, B's own mined blocks surviving = 0/2
+  positive control: A retained 3/3 of its own blocks, and 3/3 are present in the chain B adopted
+  B's genesis survived the adoption: False -- each node stamps its own at __init__, so none was ever 'shared'
+  wasted attempts (B's abandoned branch): 19755
+  wrote results/wasted_work.json
+  wrote results/wasted_work.csv (3 rows, 9 cols)
+
+=== experiment: automatic sync modification ===
+  round 0: A=2 B=1 agree=False
+  round 1: A=2 B=2 agree=False
+  round 2: A=3 B=2 agree=False
+  round 3: A=3 B=3 agree=False
+  round 4: A=4 B=3 agree=False
+  round 5: A=4 B=4 agree=False
+  settled: A=4 B=4 agree=False
+  wrote results/autosync.csv (7 rows, 5 cols)
+
+=== experiment: concurrent sync during mining (race_fixed) ===
+  slow chain before/after: 1 -> 2
+  sync during PoW took 0.778s: 'Our blockchain is the latest'
+  witness (fast node) verdict on the longer chain: 'Our blockchain is the latest'
+  accepted longer chain: False
+  independent link check on P's chain: {'links_ok': True, 'blocks_in_chain': 2}
+  wrote results/race_fixed_result.json
+
+all done in 1782.8s

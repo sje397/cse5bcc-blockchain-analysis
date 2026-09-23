@@ -1,0 +1,31 @@
+{
+  "label": "race_fixed",
+  "script": "node.py",
+  "fast_chain": 5,
+  "slow_chain_before": 1,
+  "mid_mine_sync_seconds": 0.778,
+  "mid_mine_sync_message": "Our blockchain is the latest",
+  "rec": {
+    "node": "race_fixed_P_slow",
+    "difficulty": 6,
+    "block_index": 1,
+    "attempts": 4400367,
+    "wall_time_s": 3.833881,
+    "server_time_s": 3.8326,
+    "overhead_s": 0.001281,
+    "attempt_rate": 1148141.4705421908,
+    "attempt_rate_wall": 1147757.90871997,
+    "nonce": 4400366
+  },
+  "slow_chain_after": 2,
+  "fast_chain_after_mid_sync": 5,
+  "witness_verdict": "Our blockchain is the latest",
+  "witness_accepted_long_chain": false,
+  "witness_length_after": 5,
+  "p_chain_length": 2,
+  "p_last_block_index": 1,
+  "independent_link_check": {
+    "links_ok": true,
+    "blocks_in_chain": 2
+  }
+}

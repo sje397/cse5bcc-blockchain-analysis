@@ -1,0 +1,8 @@
+label,blocks,tx_per_block,chain_bytes,sync_wall_s,sync_server_s,updated,b_length_after,agree
+empty,5,0,1469,0.007322,0.0062,True,6,True
+empty,10,0,2737,0.005804,0.0049,True,11,True
+empty,25,0,6553,0.005644,0.0047,True,26,True
+empty,50,0,12906,0.006366,0.0052,True,51,True
+empty,100,0,25620,0.006928,0.0056,True,101,True
+empty,200,0,51133,0.007078,0.0057,True,201,True
+empty,400,0,102191,0.009638,0.0079,True,401,True

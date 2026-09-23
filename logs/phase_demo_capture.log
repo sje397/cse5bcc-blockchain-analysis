@@ -1,0 +1,275 @@
+CSE5BCC Assessment 1 — Phases 1-3 walkthrough
+python 3.12.13   started 2026-09-23 16:23:33
+provided program : provided/blockchain_assessment.py (target hard-coded '0000')
+modified node    : node.py (target read from DIFFICULTY)
+all nodes bind to 127.0.0.1. Every duration is the node's own figure; the mining lines
+  print wall-clock around the same HTTP call beside it, so transport cost is visible
+  and is not silently folded into the measurement.
+
+======================================================================================
+PHASE 1 — single node, target '0000'  (provided program, as supplied)
+======================================================================================
+  $ python3 blockchain_assessment.py 5201
+  node started                           ready on :5201 in 0.17 s  (difficulty confirmed on the wire: '0000')
+  chain at p1 (port 5201): 1 block(s), fingerprint d4c2804120c32e25
+    [0] hash d71e44f99eb2e9…  prev 181cfa3e85f3c2…  txs=0  nonce=61093  link=genesis
+
+  -- mine a block (mining time) --
+    GET /mine -> block 1  nonce=21087     attempts=21,088    mining=0.0173 s wall=0.0181 s
+    GET /mine -> block 2  nonce=338511    attempts=338,512   mining=0.2730 s wall=0.2743 s
+    GET /mine -> block 3  nonce=62076     attempts=62,077    mining=0.0514 s wall=0.0529 s
+    median of 3 blocks: 0.0514 s   (range 0.0173-0.2730 s)
+
+  -- add a transaction (transaction time) --
+  POST /transactions/new -> 201          'Transaction will be added to block 4'  transaction time = 0.0001 s
+
+  -- mine the block that includes it --
+    GET /mine -> block 4  nonce=43590     attempts=43,591    mining=0.0502 s wall=0.0512 s
+    median of 1 blocks: 0.0502 s   (range 0.0502-0.0502 s)
+
+  -- view the chain --
+  chain at p1 (port 5201): 5 block(s), fingerprint ca787d79cbcdaaad
+    [0] hash d71e44f99eb2e9…  prev 181cfa3e85f3c2…  txs=0  nonce=61093  link=genesis
+    [1] hash 4a0ace2ba632e1…  prev d71e44f99eb2e9…  txs=1  nonce=21087  link=ok
+    [2] hash 599697a47ff870…  prev 4a0ace2ba632e1…  txs=1  nonce=338511  link=ok
+    [3] hash b9f765de6979cd…  prev 599697a47ff870…  txs=1  nonce=62076  link=ok
+    [4] hash c8907349754a4d…  prev b9f765de6979cd…  txs=2  nonce=43590  link=ok
+
+======================================================================================
+PHASE 2 — three nodes, target '0000'  (provided program, as supplied)
+======================================================================================
+  $ python3 blockchain_assessment.py 5202   # node A
+  $ python3 blockchain_assessment.py 5203   # node B
+
+  -- register each node with the other --
+  POST /nodes/add_nodes (A)              nodes now known to A: http://127.0.0.1:5203
+  POST /nodes/add_nodes (B)              nodes now known to B: http://127.0.0.1:5202
+
+  -- mine on A only, then compare --
+  GET /mine (A)                          block mined on A
+                                         compare A vs B: A=894fa89b1c67221e (2 blocks)  B=16bd60aa1b34496a (1 blocks)  identical=False
+
+  -- synchronise B --
+  GET /nodes/sync -> 200                 'The blockchain has been updated to the latest'  sync time = 0.005 s
+                                         compare A vs B after sync: A=894fa89b1c67221e (2 blocks)  B=894fa89b1c67221e (2 blocks)  identical=True
+
+  -- add a transaction on A, mine it, sync B (waiting for a sync on B) --
+  POST /transactions/new -> 201          'Transaction will be added to block 2'  transaction time = 0.0 s
+  GET /mine (A)                          block with the transaction mined on A
+  GET /nodes/sync -> 200                 'The blockchain has been updated to the latest'  sync time = 0.0011 s
+                                         compare A vs B: A=2026f23f2bc5415a (3 blocks)  B=2026f23f2bc5415a (3 blocks)  identical=True
+
+  -- bring up a third node and synchronise it --
+  $ python3 blockchain_assessment.py 5204   # node C
+  POST /nodes/add_nodes (A,B,C)          full mesh of 3 nodes registered
+  GET /nodes/sync -> 200                 'The blockchain has been updated to the latest'  sync time = 0.0069 s
+  chain at C (port 5204): 3 block(s), fingerprint 2026f23f2bc5415a
+    [0] hash 77e636cdfb2d54…  prev 181cfa3e85f3c2…  txs=0  nonce=61093  link=genesis
+    [1] hash 2f1c347557a205…  prev 77e636cdfb2d54…  txs=1  nonce=2844  link=ok
+    [2] hash adccdd5bf5577d…  prev 2f1c347557a205…  txs=2  nonce=33886  link=ok
+                                         compare A vs B: A=2026f23f2bc5415a (3 blocks)  B=2026f23f2bc5415a (3 blocks)  identical=True
+                                         compare A vs C: A=2026f23f2bc5415a (3 blocks)  C=2026f23f2bc5415a (3 blocks)  identical=True
+
+  -- add a transaction on B, mine it, sync A and C --
+  POST /transactions/new -> 201          'Transaction will be added to block 3'  transaction time = 0.0 s
+  GET /mine (B)                          block with the transaction mined on B
+  GET /nodes/sync -> 200                 'The blockchain has been updated to the latest'  sync time = 0.005 s
+  GET /nodes/sync -> 200                 'The blockchain has been updated to the latest'  sync time = 0.0015 s
+                                         compare A vs B: A=6e5ab976c9afa867 (4 blocks)  B=6e5ab976c9afa867 (4 blocks)  identical=True
+                                         compare A vs C: A=6e5ab976c9afa867 (4 blocks)  C=6e5ab976c9afa867 (4 blocks)  identical=True
+                                         all three chains identical: True
+
+======================================================================================
+PHASE 1 — single node, target '0000'  (control: modified node at the same target)
+======================================================================================
+  $ python3 node.py 5205   # DIFFICULTY=0000
+  node started                           ready on :5205 in 0.18 s  (difficulty confirmed on the wire: '0000')
+  chain at p1 (port 5205): 1 block(s), fingerprint 429da7df42684073
+    [0] hash 4e227f2a70192f…  prev 181cfa3e85f3c2…  txs=0  nonce=61093  link=genesis
+
+  -- mine a block (mining time) --
+    GET /mine -> block 1  nonce=38001     attempts=38,002    mining=0.0304 s wall=0.0312 s
+    GET /mine -> block 2  nonce=11604     attempts=11,605    mining=0.0094 s wall=0.0105 s
+    GET /mine -> block 3  nonce=76108     attempts=76,109    mining=0.0603 s wall=0.0615 s
+    median of 3 blocks: 0.0304 s   (range 0.0094-0.0603 s)
+
+  -- add a transaction (transaction time) --
+  POST /transactions/new -> 201          'Transaction will be added to block 4'  transaction time = 0.0001 s
+
+  -- mine the block that includes it --
+    GET /mine -> block 4  nonce=8709      attempts=8,710     mining=0.0098 s wall=0.0105 s
+    median of 1 blocks: 0.0098 s   (range 0.0098-0.0098 s)
+
+  -- view the chain --
+  chain at p1 (port 5205): 5 block(s), fingerprint bc17faf65f71f52a
+    [0] hash 4e227f2a70192f…  prev 181cfa3e85f3c2…  txs=0  nonce=61093  link=genesis
+    [1] hash 78340903efcadf…  prev 4e227f2a70192f…  txs=1  nonce=38001  link=ok
+    [2] hash 6e76a84ced9950…  prev 78340903efcadf…  txs=1  nonce=11604  link=ok
+    [3] hash 4e63fddc9a3697…  prev 6e76a84ced9950…  txs=1  nonce=76108  link=ok
+    [4] hash 7829250ffd7271…  prev 4e63fddc9a3697…  txs=2  nonce=8709  link=ok
+
+======================================================================================
+PHASE 1 — single node, target '000'  (phase 3 repeat)
+======================================================================================
+  $ python3 node.py 5206   # DIFFICULTY=000
+  node started                           ready on :5206 in 0.20 s  (difficulty confirmed on the wire: '000')
+  chain at p1 (port 5206): 1 block(s), fingerprint 660e44b05df0e7b0
+    [0] hash c1a853224d037d…  prev 181cfa3e85f3c2…  txs=0  nonce=1352  link=genesis
+
+  -- mine a block (mining time) --
+    GET /mine -> block 1  nonce=1185      attempts=1,186     mining=0.0009 s wall=0.0016 s
+    GET /mine -> block 2  nonce=1405      attempts=1,406     mining=0.0011 s wall=0.0018 s
+    GET /mine -> block 3  nonce=2721      attempts=2,722     mining=0.0023 s wall=0.0030 s
+    median of 3 blocks: 0.0011 s   (range 0.0009-0.0023 s)
+
+  -- add a transaction (transaction time) --
+  POST /transactions/new -> 201          'Transaction will be added to block 4'  transaction time = 0.0 s
+
+  -- mine the block that includes it --
+    GET /mine -> block 4  nonce=573       attempts=574       mining=0.0006 s wall=0.0012 s
+    median of 1 blocks: 0.0006 s   (range 0.0006-0.0006 s)
+
+  -- view the chain --
+  chain at p1 (port 5206): 5 block(s), fingerprint 07cbd3e8ed55160b
+    [0] hash c1a853224d037d…  prev 181cfa3e85f3c2…  txs=0  nonce=1352  link=genesis
+    [1] hash f893fad58db48b…  prev c1a853224d037d…  txs=1  nonce=1185  link=ok
+    [2] hash 2a6bfdb6298fa3…  prev f893fad58db48b…  txs=1  nonce=1405  link=ok
+    [3] hash 8e4d15597dacf0…  prev 2a6bfdb6298fa3…  txs=1  nonce=2721  link=ok
+    [4] hash 44783d46611fc2…  prev 8e4d15597dacf0…  txs=2  nonce=573  link=ok
+
+======================================================================================
+PHASE 2 — three nodes, target '000'  (phase 3 repeat)
+======================================================================================
+  $ python3 node.py 5207   # node A
+  $ python3 node.py 5208   # node B
+
+  -- register each node with the other --
+  POST /nodes/add_nodes (A)              nodes now known to A: http://127.0.0.1:5208
+  POST /nodes/add_nodes (B)              nodes now known to B: http://127.0.0.1:5207
+
+  -- mine on A only, then compare --
+  GET /mine (A)                          block mined on A
+                                         compare A vs B: A=634f91f396ff991e (2 blocks)  B=547c7a28292b94c2 (1 blocks)  identical=False
+
+  -- synchronise B --
+  GET /nodes/sync -> 200                 'The blockchain has been updated to the latest'  sync time = 0.0048 s
+                                         compare A vs B after sync: A=634f91f396ff991e (2 blocks)  B=634f91f396ff991e (2 blocks)  identical=True
+
+  -- add a transaction on A, mine it, sync B (waiting for a sync on B) --
+  POST /transactions/new -> 201          'Transaction will be added to block 2'  transaction time = 0.0 s
+  GET /mine (A)                          block with the transaction mined on A
+  GET /nodes/sync -> 200                 'The blockchain has been updated to the latest'  sync time = 0.0008 s
+                                         compare A vs B: A=7fafe69ba4bff417 (3 blocks)  B=7fafe69ba4bff417 (3 blocks)  identical=True
+
+  -- bring up a third node and synchronise it --
+  $ python3 node.py 5209   # node C
+  POST /nodes/add_nodes (A,B,C)          full mesh of 3 nodes registered
+  GET /nodes/sync -> 200                 'The blockchain has been updated to the latest'  sync time = 0.0057 s
+  chain at C (port 5209): 3 block(s), fingerprint 7fafe69ba4bff417
+    [0] hash 4786b2767496d1…  prev 181cfa3e85f3c2…  txs=0  nonce=1352  link=genesis
+    [1] hash d76f2eea440ba2…  prev 4786b2767496d1…  txs=1  nonce=15704  link=ok
+    [2] hash c55ec3edd79a0d…  prev d76f2eea440ba2…  txs=2  nonce=1680  link=ok
+                                         compare A vs B: A=7fafe69ba4bff417 (3 blocks)  B=7fafe69ba4bff417 (3 blocks)  identical=True
+                                         compare A vs C: A=7fafe69ba4bff417 (3 blocks)  C=7fafe69ba4bff417 (3 blocks)  identical=True
+
+  -- add a transaction on B, mine it, sync A and C --
+  POST /transactions/new -> 201          'Transaction will be added to block 3'  transaction time = 0.0 s
+  GET /mine (B)                          block with the transaction mined on B
+  GET /nodes/sync -> 200                 'The blockchain has been updated to the latest'  sync time = 0.0051 s
+  GET /nodes/sync -> 200                 'The blockchain has been updated to the latest'  sync time = 0.0017 s
+                                         compare A vs B: A=b09f043abea50322 (4 blocks)  B=b09f043abea50322 (4 blocks)  identical=True
+                                         compare A vs C: A=b09f043abea50322 (4 blocks)  C=b09f043abea50322 (4 blocks)  identical=True
+                                         all three chains identical: True
+
+======================================================================================
+PHASE 1 — single node, target '00000'  (phase 3 repeat)
+======================================================================================
+  $ python3 node.py 5210   # DIFFICULTY=00000
+  node started                           ready on :5210 in 0.46 s  (difficulty confirmed on the wire: '00000')
+  chain at p1 (port 5210): 1 block(s), fingerprint 213ac67e6982dd25
+    [0] hash 03ae81e9a2085c…  prev 181cfa3e85f3c2…  txs=0  nonce=706898  link=genesis
+
+  -- mine a block (mining time) --
+    GET /mine -> block 1  nonce=307929    attempts=307,930   mining=0.2403 s wall=0.2413 s
+    GET /mine -> block 2  nonce=267736    attempts=267,737   mining=0.2080 s wall=0.2094 s
+    GET /mine -> block 3  nonce=576542    attempts=576,543   mining=0.4441 s wall=0.4454 s
+    median of 3 blocks: 0.2403 s   (range 0.2080-0.4441 s)
+
+  -- add a transaction (transaction time) --
+  POST /transactions/new -> 201          'Transaction will be added to block 4'  transaction time = 0.0 s
+
+  -- mine the block that includes it --
+    GET /mine -> block 4  nonce=1415344   attempts=1,415,345 mining=1.5543 s wall=1.5554 s
+    median of 1 blocks: 1.5543 s   (range 1.5543-1.5543 s)
+
+  -- view the chain --
+  chain at p1 (port 5210): 5 block(s), fingerprint 44f85ac2ddd43277
+    [0] hash 03ae81e9a2085c…  prev 181cfa3e85f3c2…  txs=0  nonce=706898  link=genesis
+    [1] hash 4997054a04405c…  prev 03ae81e9a2085c…  txs=1  nonce=307929  link=ok
+    [2] hash 2968393aa7ddc3…  prev 4997054a04405c…  txs=1  nonce=267736  link=ok
+    [3] hash a4b0797f291059…  prev 2968393aa7ddc3…  txs=1  nonce=576542  link=ok
+    [4] hash 7b385d57a7f1f9…  prev a4b0797f291059…  txs=2  nonce=1415344  link=ok
+
+======================================================================================
+PHASE 2 — three nodes, target '00000'  (phase 3 repeat)
+======================================================================================
+  $ python3 node.py 5211   # node A
+  $ python3 node.py 5212   # node B
+
+  -- register each node with the other --
+  POST /nodes/add_nodes (A)              nodes now known to A: http://127.0.0.1:5212
+  POST /nodes/add_nodes (B)              nodes now known to B: http://127.0.0.1:5211
+
+  -- mine on A only, then compare --
+  GET /mine (A)                          block mined on A
+                                         compare A vs B: A=fc09389efa2314f6 (2 blocks)  B=93ac1550b24bc824 (1 blocks)  identical=False
+
+  -- synchronise B --
+  GET /nodes/sync -> 200                 'The blockchain has been updated to the latest'  sync time = 0.0041 s
+                                         compare A vs B after sync: A=fc09389efa2314f6 (2 blocks)  B=fc09389efa2314f6 (2 blocks)  identical=True
+
+  -- add a transaction on A, mine it, sync B (waiting for a sync on B) --
+  POST /transactions/new -> 201          'Transaction will be added to block 2'  transaction time = 0.0 s
+  GET /mine (A)                          block with the transaction mined on A
+  GET /nodes/sync -> 200                 'The blockchain has been updated to the latest'  sync time = 0.0013 s
+                                         compare A vs B: A=8423893d389ec854 (3 blocks)  B=8423893d389ec854 (3 blocks)  identical=True
+
+  -- bring up a third node and synchronise it --
+  $ python3 node.py 5213   # node C
+  POST /nodes/add_nodes (A,B,C)          full mesh of 3 nodes registered
+  GET /nodes/sync -> 200                 'The blockchain has been updated to the latest'  sync time = 0.0071 s
+  chain at C (port 5213): 3 block(s), fingerprint 8423893d389ec854
+    [0] hash ea557f923df88e…  prev 181cfa3e85f3c2…  txs=0  nonce=706898  link=genesis
+    [1] hash 35e0c9268479a6…  prev ea557f923df88e…  txs=1  nonce=816463  link=ok
+    [2] hash 892cf3642d4ce6…  prev 35e0c9268479a6…  txs=2  nonce=2645920  link=ok
+                                         compare A vs B: A=8423893d389ec854 (3 blocks)  B=8423893d389ec854 (3 blocks)  identical=True
+                                         compare A vs C: A=8423893d389ec854 (3 blocks)  C=8423893d389ec854 (3 blocks)  identical=True
+
+  -- add a transaction on B, mine it, sync A and C --
+  POST /transactions/new -> 201          'Transaction will be added to block 3'  transaction time = 0.0 s
+  GET /mine (B)                          block with the transaction mined on B
+  GET /nodes/sync -> 200                 'The blockchain has been updated to the latest'  sync time = 0.0061 s
+  GET /nodes/sync -> 200                 'The blockchain has been updated to the latest'  sync time = 0.0018 s
+                                         compare A vs B: A=45343b9233c23655 (4 blocks)  B=45343b9233c23655 (4 blocks)  identical=True
+                                         compare A vs C: A=45343b9233c23655 (4 blocks)  C=45343b9233c23655 (4 blocks)  identical=True
+                                         all three chains identical: True
+
+======================================================================================
+RESULTS — times recorded per phase (task sheet table)
+======================================================================================
+  phase  target   nodes  tx (s)    mining (s)  sync (s)  program
+  1      0000     1      0.0001    0.0514      -         blockchain_assessment.py
+  2      0000     3      -         -           0.0050    blockchain_assessment.py
+  1      0000     1      0.0001    0.0304      -         node.py
+  1      000      1      0.0000    0.0011      -         node.py
+  2      000      3      -         -           0.0048    node.py
+  1      00000    1      0.0000    0.2403      -         node.py
+  2      00000    3      -         -           0.0041    node.py
+
+  mining (s) = median of 3 blocks where a single value is shown; the second
+  block's time is in the JSON. Single-run mining durations are dominated by
+  luck (geometric attempts); the analysis section uses harness.py distributions.
+
+  written: results/prescribed_table.csv, results/prescribed_table.json
+
+  13 node processes stopped; ports released.

@@ -1,0 +1,41 @@
+
+=== experiment: difficulty ===
+  difficulty 3: startup 0.13s, warm-up mean 2.3ms -> 300 reps
+    25/300
+    50/300
+    75/300
+    100/300
+    125/300
+    150/300
+    175/300
+    200/300
+    225/300
+    250/300
+    275/300
+    300/300
+    mean wall 0.0039s, mean attempts 4297, rate 1290019/s
+  difficulty 4: startup 0.20s, warm-up mean 31.2ms -> 300 reps
+    25/300
+    50/300
+    75/300
+    100/300
+    125/300
+    150/300
+    175/300
+    200/300
+    225/300
+    250/300
+    275/300
+    300/300
+    mean wall 0.0513s, mean attempts 65945, rate 1303383/s
+  difficulty 5: startup 0.58s, warm-up mean 349.6ms -> 300 reps
+    25/300
+    50/300
+    75/300
+    100/300
+    125/300
+    150/300
+    175/300
+    200/300
+    225/300
+    250/300

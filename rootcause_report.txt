@@ -1,0 +1,115 @@
+
+==============================================================================
+FINDING 2b  live reproduction against the provided class
+==============================================================================
+difficulty_target = '0000'  (so 16**4 = 65,536 attempts expected per block)
+
+  node    index  nonce    timestamp             hash_block(genesis)
+  node A     0      61093    1790145427.315648   9b9f6aeec5d4d927d46e401ae81b8b81e35c9788d53ac225f1bd746d323494d8
+  node B     0      61093    1790145427.466020   74d31c3f592482953066f88f1e4e9a9ec0a45004c9981b8fa0cc69147bc1f832
+  node C     0      61093    1790145427.560454   6b35da48954a916e15d5dbf6ac0054c1f84ee3750180087ab8fd94b5ae762db1
+
+  distinct nonces        : 1  [61093]
+  distinct prev hashes   : 1
+  distinct tx lists      : 1
+  distinct block hashes  : 3
+
+  CLAIM identical work      (1 nonce for 3 nodes) : True
+  CLAIM different identity  (3 hashes for 3 nodes): True
+
+  POSITIVE CONTROL - is the timestamp the whole difference?
+  Copy node A's genesis **timestamp** onto node B's genesis, change nothing
+  else, and re-hash.
+    A hash                    : 9b9f6aeec5d4d927d46e401ae81b8b81e35c9788d53ac225f1bd746d323494d8
+    B hash (own timestamp)    : 74d31c3f592482953066f88f1e4e9a9ec0a45004c9981b8fa0cc69147bc1f832
+    B hash (A's timestamp)    : 9b9f6aeec5d4d927d46e401ae81b8b81e35c9788d53ac225f1bd746d323494d8
+    B now equals A            : True
+    -> the divergence is fully explained by the timestamp field, nothing else.
+
+  CONSEQUENCE - is the timestamp authenticated by the proof-of-work?
+    valid_proof on the block as mined                 : True
+    timestamp :=            0.0   valid_proof still True  and hash_block changed: True
+    timestamp :=            1.0   valid_proof still True  and hash_block changed: True
+    timestamp :=   2000000000.0   valid_proof still True  and hash_block changed: True
+    timestamp :=           -1.0   valid_proof still True  and hash_block changed: True
+    -> a block's recorded time can be set to any value at all and the
+       proof-of-work still validates.  The PoW covers the ledger's contents
+       but not its clock; only the *link* into the next block notices.
+
+  CONTROL - valid_proof must fail when a field it DOES cover is changed.
+  Without this, the result above would only show the check is vacuous.
+    nonce + 1        -> valid_proof = False
+    index + 1        -> valid_proof = False
+    prev hash + 'a'  -> valid_proof = False
+    txs + [1]        -> valid_proof = False
+    -> the check is not vacuous; it binds every field in the preimage.
+       The timestamp is absent from the preimage, not merely unchecked.
+
+==============================================================================
+FINDING 2a  forensics over the real capture log
+==============================================================================
+  block listings parsed from the log : 33
+  of which genesis                  : 11
+  independent grep count of the same: 11
+  parser agrees with grep           : True
+
+  genesis records, grouped by the nonce the node found:
+    nonce      distinct hashes   block hashes
+    1352       2                 4786b2767496…, c1a853224d03…
+    61093      3                 4e227f2a7019…, 77e636cdfb2d…, d71e44f99eb2…
+    706898     2                 03ae81e9a208…, ea557f923df8…
+
+  nonces producing more than one block hash : 3 of 3
+  maximum hashes from a single nonce        : 3
+
+  why genesis is the clean case - are the inputs really identical?
+    distinct index values        : 1
+    distinct transaction counts  : 1
+    distinct previous hashes     : 1
+    -> every input to valid_proof is identical, so identical nonces are
+       the SAME work on the SAME data.  Only the block hash differs.
+
+  LIMIT OF THIS EVIDENCE, stated plainly: for a non-genesis block the inputs
+  legitimately differ between nodes, so a repeated nonce there would prove
+  nothing.  Genesis is the only class where the inputs are identical by
+  construction, which is why the claim rests on it.
+
+==============================================================================
+FINDING 1  the prescribed estimator, simulated on real blocks
+==============================================================================
+  difficulty-5 blocks measured        : 127
+  sample mean                         : 0.9267 s
+  theoretical mean (16^5 / rate)       : 0.8669 s
+  sample mean / theory                 : 1.069  (1.000 would be exact)
+
+  E[median of 3] / E[X], closed form (p -> 0) : 0.8333  (= 5/6)
+  mean simulated single block / sample mean   : 0.997
+  mean simulated median of 3 / sample mean    : 0.830
+  mean simulated mean of 3   / sample mean    : 0.999
+
+  P(one block within +-50% of the mean)       : 0.387
+  P(median of 3 within +-50% of the mean)     : 0.539
+
+  observed p5 .. p95 span at n=127             : 0.0739 .. 2.6485 s = 35.8x
+  exponential population expectation        : 58.4x
+  -> the spread is what a geometric search at this target is supposed to do.
+
+  the task sheet's own Phase 1 run at target 00000:
+    reported 'mining time' (median of 3)  : 0.2403 s
+    the very next block, same target      : 1.5543 s
+    ratio                                 : 6.47x
+    each against the battery mean 0.9267 s : 0.259x and 1.677x
+
+==============================================================================
+WHAT THIS DOES AND DOES NOT EXPLAIN
+==============================================================================
+  FINDING 1 is a defect in the measurement protocol, not in the code. The
+  spread between 0.2403 s and 1.5543 s is ordinary geometric variance that the
+  prescribed estimator cannot resolve at n = 3. It is NOT caused by FINDING 2,
+  and this report does not claim that it is.
+
+  FINDING 2 is a defect in the provided scaffold, visible only in multi-node
+  behaviour: identical work, divergent identity, no canonical genesis. It does
+  not affect a single node's timing, and the 6.47x spread is not evidence of it.
+
+  They are independent, and they are reported as two findings.

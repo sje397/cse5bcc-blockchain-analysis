@@ -1,0 +1,7 @@
+label,blocks,tx_per_block,chain_bytes,sync_wall_s,sync_server_s,updated,b_length_after,agree
+100tx,5,100,27822,0.00721,0.006,True,6,True
+100tx,10,100,55452,0.008246,0.0067,True,11,True
+100tx,25,100,138347,0.011703,0.0097,True,26,True
+100tx,50,100,276506,0.016276,0.0129,True,51,True
+100tx,100,100,552820,0.022076,0.0178,True,101,True
+100tx,200,100,1105539,0.045112,0.0362,True,201,True

@@ -1,0 +1,50 @@
+[
+  {
+    "difficulty": 3,
+    "expected_attempts_16pow_k": 4096,
+    "observed_mean_attempts": 4086.1,
+    "mean_wall_s": 0.004427,
+    "median_wall_s": 0.003287,
+    "mean_server_s": 0.003704,
+    "mean_attempt_rate": 1099036.5,
+    "chain_blocks": 302,
+    "startup_seconds": 0.2257,
+    "reps": 300
+  },
+  {
+    "difficulty": 4,
+    "expected_attempts_16pow_k": 65536,
+    "observed_mean_attempts": 66148.9,
+    "mean_wall_s": 0.055471,
+    "median_wall_s": 0.038358,
+    "mean_server_s": 0.05428,
+    "mean_attempt_rate": 1214394.1,
+    "chain_blocks": 302,
+    "startup_seconds": 0.1942,
+    "reps": 300
+  },
+  {
+    "difficulty": 5,
+    "expected_attempts_16pow_k": 1048576,
+    "observed_mean_attempts": 1116839.0,
+    "mean_wall_s": 0.926655,
+    "median_wall_s": 0.665968,
+    "mean_server_s": 0.925236,
+    "mean_attempt_rate": 1209621.8,
+    "chain_blocks": 129,
+    "startup_seconds": 0.4429,
+    "reps": 127
+  },
+  {
+    "difficulty": 6,
+    "expected_attempts_16pow_k": 16777216,
+    "observed_mean_attempts": 18387442.1,
+    "mean_wall_s": 14.53747,
+    "median_wall_s": 11.84219,
+    "mean_server_s": 14.535974,
+    "mean_attempt_rate": 1260222.1,
+    "chain_blocks": 25,
+    "startup_seconds": 9.9004,
+    "reps": 23
+  }
+]

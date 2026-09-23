@@ -1,0 +1,22 @@
+ * Serving Flask app 'node'
+ * Debug mode: off
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5142
+ * Running on http://192.168.4.20:5142
+[33mPress CTRL+C to quit[0m
+127.0.0.1 - - [23/Sep/2026 16:21:14] "GET /blockchain HTTP/1.1" 200 -
+127.0.0.1 - - [23/Sep/2026 16:21:14] "GET /blockchain HTTP/1.1" 200 -
+127.0.0.1:5141
+127.0.0.1:5143
+127.0.0.1 - - [23/Sep/2026 16:21:15] "[35m[1mPOST /nodes/add_nodes HTTP/1.1[0m" 201 -
+127.0.0.1 - - [23/Sep/2026 16:21:15] "GET /mine HTTP/1.1" 200 -
+127.0.0.1 - - [23/Sep/2026 16:21:15] "GET /mine HTTP/1.1" 200 -
+127.0.0.1 - - [23/Sep/2026 16:21:15] "GET /mine HTTP/1.1" 200 -
+127.0.0.1 - - [23/Sep/2026 16:21:15] "GET /mine HTTP/1.1" 200 -
+127.0.0.1 - - [23/Sep/2026 16:21:15] "GET /blockchain HTTP/1.1" 200 -
+127.0.0.1 - - [23/Sep/2026 16:21:15] "GET /blockchain HTTP/1.1" 200 -
+127.0.0.1 - - [23/Sep/2026 16:21:18] "GET /blockchain HTTP/1.1" 200 -
+127.0.0.1 - - [23/Sep/2026 16:21:18] "GET /blockchain HTTP/1.1" 200 -
+127.0.0.1 - - [23/Sep/2026 16:21:18] "GET /nodes/sync HTTP/1.1" 200 -
+127.0.0.1 - - [23/Sep/2026 16:21:18] "GET /blockchain HTTP/1.1" 200 -

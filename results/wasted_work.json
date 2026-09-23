@@ -1,0 +1,10 @@
+{
+  "a_attempts": 78152,
+  "b_attempts": 19755,
+  "a_blocks_surviving": 3,
+  "b_blocks_surviving": 0,
+  "b_blocks_destroyed": 2,
+  "a_control_blocks_in_adopted_chain": 3,
+  "genesis_survived_b_sync": false,
+  "wasted_attempts": 19755
+}

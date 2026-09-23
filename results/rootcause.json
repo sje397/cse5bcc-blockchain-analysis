@@ -1,0 +1,37 @@
+{
+  "live": {
+    "difficulty_target": "0000",
+    "nonce_identical_across_nodes": true,
+    "distinct_genesis_hashes": 3,
+    "genesis_nonce": 61093,
+    "timestamp_copy_reproduces_hash": true,
+    "valid_proof_binds_covered_fields": true
+  },
+  "log": {
+    "listings_parsed": 33,
+    "genesis_listings": 11,
+    "genesis_listings_by_grep": 11,
+    "distinct_genesis_nonces": 3,
+    "nonces_with_multiple_hashes": 3,
+    "max_hashes_from_one_nonce": 3,
+    "genesis_distinct_hashes_total": 7,
+    "genesis_inputs_identical": true
+  },
+  "estimator": {
+    "n_d5_blocks": 127,
+    "sample_mean_s": 0.9266554094488189,
+    "theory_mean_s": 0.8668626943727397,
+    "sample_mean_over_theory": 1.0689759929273979,
+    "closed_form_median3_over_mean": 0.8333334128061298,
+    "sim_median3_over_sample_mean": 0.8303251837354078,
+    "sim_mean3_over_sample_mean": 0.9987844723410664,
+    "p_within_50pct_single": 0.38678,
+    "p_within_50pct_median3": 0.538515,
+    "span_p5_p95": 35.82387869934535,
+    "p5_s": 0.073932,
+    "p95_s": 2.648531,
+    "prescribed_median3_s": 0.2403,
+    "prescribed_next_block_s": 1.5543,
+    "prescribed_spread_x": 6.468164794007491
+  }
+}
