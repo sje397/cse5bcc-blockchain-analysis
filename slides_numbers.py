@@ -68,8 +68,8 @@ out["ladder_span_observed_attempts"] = ladder[-1]["mean_attempts"] / ladder[0]["
 out["rate_spread"] = max(x["mean_attempt_rate"] for x in ladder) / min(x["mean_attempt_rate"] for x in ladder)
 out["startup_scaling"] = ladder[-1]["startup_s"] / ladder[0]["startup_s"]
 
-# ------------------------------------------------- the task sheet's own estimator
-# The task sheet asks for "mining time = median of 3 blocks". Test that estimator on the
+# ------------------------------------------------------ the median-of-3 estimator
+# Test the median-of-3 estimator on the
 # difficulty-5 blocks actually measured.
 d5 = [f(r["wall_time_s"]) for r in trials
       if int(f(r["difficulty"])) == 5 and f(r["wall_time_s"]) is not None]

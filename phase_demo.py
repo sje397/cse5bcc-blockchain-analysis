@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""phase_demo.py — Phases 1, 2 and 3 exactly as the task sheet prescribes.
+"""phase_demo.py — Phases 1, 2 and 3 exactly as the brief lays them out.
 
 Two outputs, both required by the marking rubric:
 
@@ -8,7 +8,7 @@ Two outputs, both required by the marking rubric:
       every required step across all phases to be *shown*, with executions and outputs --
       so each line names the call and prints what came back.
 
-  (b) the per-phase table of transaction / mining / synchronisation times the task sheet
+  (b) the per-phase table of transaction / mining / synchronisation times the brief
       asks for, written to results/prescribed_table.csv and results/prescribed_table.json.
 
 This is NOT the measurement instrument for the analysis section. Single runs at a target

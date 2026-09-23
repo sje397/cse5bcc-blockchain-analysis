@@ -645,10 +645,11 @@ def fig_fork(fork: list[dict], wasted: dict) -> dict:
     ax.set_title("Three nodes, thirteen steps: adopting the longer chain leaves an equal-length tie\n"
                  "permanently unresolved")
     ax.legend(loc="upper left", fontsize=9.5)
-    ax.text(n + 0.25, 0.8,
-            f"work destroyed when B's chain was replaced:  "
-            f"{wasted['b_blocks_destroyed']} blocks, {wasted['wasted_attempts']:,} hashes",
-            fontsize=10, color=RED, ha="right", va="bottom")
+    # A red callout here used to read "work destroyed when B's chain was replaced: 2 blocks,
+    # 19,755 hashes".  Losing a branch when a longer chain wins is what every longest-chain
+    # rule does, so on this slide it is not a finding, and the loudest colour on the figure
+    # made it look like one.  The measurement is not hidden: results/wasted_work.csv carries
+    # it, and the chart still returns it below.
 
 
     finish(fig, CHARTS / "s5_fork_timeline.png",
