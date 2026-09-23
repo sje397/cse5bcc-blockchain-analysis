@@ -1,0 +1,17 @@
+ * Serving Flask app 'node'
+ * Debug mode: off
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5217
+ * Running on http://192.168.4.20:5217
+[33mPress CTRL+C to quit[0m
+127.0.0.1 - - [23/Sep/2026 19:25:25] "GET /blockchain HTTP/1.1" 200 -
+127.0.0.1 - - [23/Sep/2026 19:25:25] "GET /blockchain HTTP/1.1" 200 -
+127.0.0.1:5216
+127.0.0.1 - - [23/Sep/2026 19:25:25] "[35m[1mPOST /nodes/add_nodes HTTP/1.1[0m" 201 -
+127.0.0.1 - - [23/Sep/2026 19:25:25] "GET /mine HTTP/1.1" 200 -
+127.0.0.1 - - [23/Sep/2026 19:25:25] "GET /mine HTTP/1.1" 200 -
+127.0.0.1 - - [23/Sep/2026 19:25:25] "GET /mine HTTP/1.1" 200 -
+127.0.0.1 - - [23/Sep/2026 19:25:25] "GET /mine HTTP/1.1" 200 -
+127.0.0.1 - - [23/Sep/2026 19:25:25] "GET /blockchain HTTP/1.1" 200 -
+127.0.0.1 - - [23/Sep/2026 19:25:28] "GET /blockchain HTTP/1.1" 200 -

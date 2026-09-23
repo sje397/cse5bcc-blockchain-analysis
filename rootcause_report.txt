@@ -5,9 +5,9 @@ FINDING 2b  live reproduction against the provided class
 difficulty_target = '0000'  (so 16**4 = 65,536 attempts expected per block)
 
   node    index  nonce    timestamp             hash_block(genesis)
-  node A     0      61093    1790145427.315648   9b9f6aeec5d4d927d46e401ae81b8b81e35c9788d53ac225f1bd746d323494d8
-  node B     0      61093    1790145427.466020   74d31c3f592482953066f88f1e4e9a9ec0a45004c9981b8fa0cc69147bc1f832
-  node C     0      61093    1790145427.560454   6b35da48954a916e15d5dbf6ac0054c1f84ee3750180087ab8fd94b5ae762db1
+  node A     0      61093    1790161495.016371   123d2b6a494549941eedd6194369cb81142ed485dc0596960292ebc3389cbea6
+  node B     0      61093    1790161495.166484   b3fb9f3cd3f056c551334b737bb78850a6fe73c0dfeefb2ebc03f54095504894
+  node C     0      61093    1790161495.392401   37b8f3a55cdc538f9eafdf86aee9e19dbba0ca77880564eeb7372a94a262f403
 
   distinct nonces        : 1  [61093]
   distinct prev hashes   : 1
@@ -20,9 +20,9 @@ difficulty_target = '0000'  (so 16**4 = 65,536 attempts expected per block)
   POSITIVE CONTROL - is the timestamp the whole difference?
   Copy node A's genesis **timestamp** onto node B's genesis, change nothing
   else, and re-hash.
-    A hash                    : 9b9f6aeec5d4d927d46e401ae81b8b81e35c9788d53ac225f1bd746d323494d8
-    B hash (own timestamp)    : 74d31c3f592482953066f88f1e4e9a9ec0a45004c9981b8fa0cc69147bc1f832
-    B hash (A's timestamp)    : 9b9f6aeec5d4d927d46e401ae81b8b81e35c9788d53ac225f1bd746d323494d8
+    A hash                    : 123d2b6a494549941eedd6194369cb81142ed485dc0596960292ebc3389cbea6
+    B hash (own timestamp)    : b3fb9f3cd3f056c551334b737bb78850a6fe73c0dfeefb2ebc03f54095504894
+    B hash (A's timestamp)    : 123d2b6a494549941eedd6194369cb81142ed485dc0596960292ebc3389cbea6
     B now equals A            : True
     -> the divergence is fully explained by the timestamp field, nothing else.
 
@@ -75,7 +75,7 @@ FINDING 2a  forensics over the real capture log
   construction, which is why the claim rests on it.
 
 ==============================================================================
-FINDING 1  the prescribed estimator, simulated on real blocks
+FINDING 1  the median-of-three reading, simulated on real blocks
 ==============================================================================
   difficulty-5 blocks measured        : 127
   sample mean                         : 0.9267 s
@@ -94,7 +94,7 @@ FINDING 1  the prescribed estimator, simulated on real blocks
   exponential population expectation        : 58.4x
   -> the spread is what a geometric search at this target is supposed to do.
 
-  the task sheet's own Phase 1 run at target 00000:
+  my Phase 1 walkthrough at target 00000 (median of three):
     reported 'mining time' (median of 3)  : 0.2403 s
     the very next block, same target      : 1.5543 s
     ratio                                 : 6.47x
@@ -105,7 +105,7 @@ WHAT THIS DOES AND DOES NOT EXPLAIN
 ==============================================================================
   FINDING 1 is a defect in the measurement protocol, not in the code. The
   spread between 0.2403 s and 1.5543 s is ordinary geometric variance that the
-  prescribed estimator cannot resolve at n = 3. It is NOT caused by FINDING 2,
+  the median of three cannot resolve at n = 3. It is NOT caused by FINDING 2,
   and this report does not claim that it is.
 
   FINDING 2 is a defect in the provided scaffold, visible only in multi-node

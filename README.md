@@ -5,21 +5,21 @@ A measurement study of a ~200-line teaching blockchain, run across four prescrib
 numbers the exercise asks you to report actually mean anything — and, where they don't, to *prove*
 it rather than assert it.
 
-**The headline:** the prescribed mining-time estimator is biased **16.7% low by construction**, and
+**The headline:** the median-of-three reading is biased **16.7% low by construction**, and
 the block's identity is **not bound to its proof of work**: two nodes that do identical work produce
 different blocks, because the identity hash covers a timestamp the proof does not, so the identity
 never meets the target.
 
 ## The four findings
 
-### 1. The prescribed estimator is biased, and the bias is exactly 1/6
+### 1. The median-of-three reading is low, and the shortfall is exactly 1/6
 
 The exercise asks for mining time as *the median of three blocks*. Block time is a one-sided draw
 from a **geometric** distribution, and the expected median of three such draws is **5/6 of the true
 mean** — 0.8333, not 1.0. That is a property of the estimator, not of the miner, and it is not noise
 that more care could remove.
 
-At n = 3 the sampling noise also swamps the signal. On the prescribed protocol at target `00000`:
+At n = 3 the sampling noise also swamps the signal. On the median-of-three reading at target `00000`:
 three blocks at 0.2403, 0.2080 and 0.4441 s — median 0.2403 s — then **1.5543 s on the very next
 block**, same node, same target, minutes apart. That is **6.47×** the median.
 
@@ -123,7 +123,7 @@ blocks). The observed means run 0–10% above 16ᵏ, consistent with a small fix
 That matters to finding 1 rather than being a result of its own. If the underlying distribution were
 not geometric — if the miner sped up over the run, or the machine drifted, or the harness leaked time
 — the 5/6 result would not apply, and the shortfall would be an artefact of these particular runs
-rather than a structural property of the prescribed estimator. The shape is right, so the bias is
+rather than a structural property of the median-of-three reading. The shape is right, so the bias is
 structural.
 
 *Proven by:* `results/difficulty_summary.json`, `results/difficulty_trials.csv`,

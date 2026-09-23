@@ -264,9 +264,9 @@ def fig_difficulty_ladder(summary: list[dict], prescribed: list[dict]) -> dict:
     ax.text(0.97, 0.06, f"n = {', '.join(str(r) for r in reps)} blocks",
             transform=ax.transAxes, ha="right", fontsize=10, color=MUTED)
 
-    # The task sheet prescribes "mining time = median of 3 blocks".  Its EXPECTATION
+    # The robust way to tighten a one-block reading is "mining time = median of 3 blocks".  Its EXPECTATION
     # is not the mean: for a geometric search the 2nd order statistic of 3 sits at
-    # e_median_of_3_over_mean(p) = 0.833 of it, so the prescribed protocol reads low
+    # e_median_of_3_over_mean(p) = 0.833 of it, so the median-of-three reading is low
     # even when nothing goes wrong.  This panel previously plotted the sample median
     # (0.69 of the mean) and labelled it "median of 3" -- two different quantities
     # under one name, and the more flattering of the two.  Replaced.
@@ -289,10 +289,10 @@ def fig_difficulty_ladder(summary: list[dict], prescribed: list[dict]) -> dict:
     ax2.text(0.98, 0.195, "at every difficulty",
              transform=ax2.transAxes, fontsize=9, color=ORANGE, ha="right", va="bottom")
 
-    # My own Phase 1 walkthrough at this target, following the task sheet's prescribed
+    # My own Phase 1 walkthrough at this target, reporting the median of three
     # procedure.  Two points, same target, minutes apart, 6.47x apart -- which is the
     # finding this panel exists for.  These are MY measurements (results/prescribed_table.csv),
-    # not numbers printed in the task sheet.
+    # not numbers published anywhere else.
     p = next(r for r in prescribed
              if r["program"] == "node.py" and r["target"] == "00000")
     t_med, t_next = float(p["mining_time_s"]), float(p["mining_time_second_block_s"])
@@ -309,7 +309,7 @@ def fig_difficulty_ladder(summary: list[dict], prescribed: list[dict]) -> dict:
     ax2.set_xlim(2.7, 6.9)
     ax2.set_xlabel("difficulty target")
     ax2.set_ylabel("mining time per block  (s, log scale)")
-    ax2.set_title("(b)  The task-sheet estimator\nreads below the mean")
+    ax2.set_title("(b)  The median of three\nreads below the mean")
     ax2.legend(loc="upper left")
 
     finish(fig, CHARTS / "s1_difficulty_ladder.png",
@@ -318,7 +318,7 @@ def fig_difficulty_ladder(summary: list[dict], prescribed: list[dict]) -> dict:
     return {"ratios": [round(o / e, 3) for k, e, o in zip(ks, exp, obs)],
             "rate_MHs": [round(r / 1e6, 3) for r in rate],
             # Replaces "wall_gap" (sample median / mean), which measured the sample
-            # rather than the prescribed estimator and so did not describe the
+            # rather than the median of three and so did not describe the
             # protocol being evaluated.
             "med3_expected_gap": [round(w / m, 3) for w, m in zip(wall, med3_exp)],
             "step_factor_wall": round(wall[-1] / wall[0], 1),
@@ -407,7 +407,7 @@ def fig_distribution_collapse(trials: list[dict]) -> dict:
 
 # -------------------------------------------------------------------- figure 3
 def fig_estimator(trials: list[dict]) -> dict:
-    """Why the task sheet's 'median of 3' is biased low, measured and closed-form."""
+    """Why a median of 3 is biased low, measured and closed-form."""
     by_k: dict[int, list[int]] = defaultdict(list)
     for r in trials:
         by_k[int(r["difficulty"])].append(int(r["attempts"]))
@@ -469,7 +469,7 @@ def fig_estimator(trials: list[dict]) -> dict:
         a, b, c = rng.choice(vals), rng.choice(vals), rng.choice(vals)
         mean3.append((a + b + c) / 3)
 
-    estimates = [("one block\n(n = 1)", single), ("median of 3\n(the task sheet)", med3),
+    estimates = [("one block\n(n = 1)", single), ("median of 3\n(the robust fix)", med3),
                  ("mean of 3", mean3)]
     labels = [name for name, _ in estimates]
     means = [sum(e) / len(e) / truth for _, e in estimates]
@@ -495,7 +495,7 @@ def fig_estimator(trials: list[dict]) -> dict:
     ax2.set_xlabel("estimate $\\div$ true mean   (axis zoomed to show the bias)")
     # Two lines, not one: a 48-char single line runs past the figure's right edge
     # (tight_layout budgets for title HEIGHT, never width).
-    ax2.set_title("(b)  Bias: the task-sheet estimator\nsettles 17% low")
+    ax2.set_title("(b)  Bias: the median of three\nsettles 17% low")
     ax2.text(1.0, -0.62, "true mean\n1.0", fontsize=9, color=BLUE, ha="center", va="bottom")
     ax2.text(5 / 6, len(estimates) - 0.5, "$5/6$ ceiling", fontsize=9.5, color=RED,
              ha="right", va="top")

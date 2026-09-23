@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """Two independent findings, demonstrated rather than asserted.
 
-FINDING 1 (measurement).  The task sheet's Phase 1 protocol reports "mining time =
+FINDING 1 (measurement).  A one-block walkthrough reports "mining time =
 median of 3 blocks".  That estimator is biased low BY CONSTRUCTION (E = 5/6 of the
 mean) and at n = 3 the sampling noise dominates.  This is a property of the
-protocol, not a defect in any code, and it is why the prescribed run shows
+procedure, not a defect in any code, and it is why the walkthrough shows
 0.2403 s and then 1.5543 s on the same target minutes apart.  Demonstrated here by
 simulating the estimator on the 127 difficulty-5 blocks actually measured.
 
@@ -263,7 +263,7 @@ out["log"] = {
 }
 
 # =========================================================== FINDING 1
-head("FINDING 1  the prescribed estimator, simulated on real blocks")
+head("FINDING 1  the median-of-three reading, simulated on real blocks")
 
 import csv
 from statistics import mean, median
@@ -282,7 +282,7 @@ say(f"  sample mean                         : {sample_mean:.4f} s")
 say(f"  theoretical mean (16^5 / rate)       : {theory_mean:.4f} s")
 say(f"  sample mean / theory                 : {sample_mean / theory_mean:.3f}  (1.000 would be exact)")
 
-# The estimator the task sheet prescribes, on the block times actually observed.
+# That estimator, on the block times actually observed.
 import random
 rng = random.Random(20260923)
 N = 200_000
@@ -317,13 +317,13 @@ say(f"  observed p5 .. p95 span at n={n}             : {p5:.4f} .. {p95:.4f} s "
 say("  exponential population expectation        : 58.4x")
 say("  -> the spread is what a geometric search at this target is supposed to do.")
 
-# The prescribed run itself, for comparison.
+# The provided run itself, for comparison.
 presc = [r for r in csv.DictReader(open(RESULTS / "prescribed_table.csv"))
          if r["program"] == "node.py" and r["target"] == "00000"][0]
 med_reported = float(presc["mining_time_s"])
 next_block = float(presc["mining_time_second_block_s"])
 say("")
-say("  my Phase 1 walkthrough at target 00000 (prescribed procedure):")
+say("  my Phase 1 walkthrough at target 00000 (median of three):")
 say(f"    reported 'mining time' (median of 3)  : {med_reported:.4f} s")
 say(f"    the very next block, same target      : {next_block:.4f} s")
 say(f"    ratio                                 : {next_block / med_reported:.2f}x")
@@ -352,7 +352,7 @@ head("WHAT THIS DOES AND DOES NOT EXPLAIN")
 
 say("  FINDING 1 is a defect in the measurement protocol, not in the code. The")
 say("  spread between 0.2403 s and 1.5543 s is ordinary geometric variance that the")
-say("  prescribed estimator cannot resolve at n = 3. It is NOT caused by FINDING 2,")
+say("  the median of three cannot resolve at n = 3. It is NOT caused by FINDING 2,")
 say("  and this report does not claim that it is.")
 say("")
 say("  FINDING 2 is a defect in the provided scaffold, visible only in multi-node")
