@@ -6,8 +6,9 @@ numbers the exercise asks you to report actually mean anything — and, where th
 it rather than assert it.
 
 **The headline:** the prescribed mining-time estimator is biased **16.7% low by construction**, and
-the block's identity is **not bound to its proof of work** — so two nodes that do identical work
-produce different blocks, and the network has no common root from which to agree.
+the block's identity is **not bound to its proof of work**: two nodes that do identical work produce
+different blocks, because the identity hash covers a timestamp the proof does not, so the identity
+never meets the target.
 
 ## The four findings
 
@@ -165,6 +166,8 @@ harness.py              the measurement instrument (experiments, guards, CSV/JSO
 node.py                 the node under test
 phase_demo.py           the prescribed walkthrough, verbatim, with a transcript
 probe_verify.py         two independent checks on the reported nonces
+probe_lock_deferral.py  the sync-holdout probe behind the presentation's null result, with controls
+probe_lock_deferral.json  that probe's own result file, written beside it on each run
 rootcause_demo.py       reproduces findings 1 and 2
 test_node_isolation.py  falsification suite for the node-identity guard
 verify_format_check.py  byte-format verification
