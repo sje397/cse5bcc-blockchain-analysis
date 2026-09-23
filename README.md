@@ -57,8 +57,12 @@ blocks each sync, re-sync, sync again and change nothing. Autosync settles the s
 blocks, B on four, `agreed = False`.
 
 Convergence returns only when one side pulls ahead: C mines one more block, B adopts — and discards
-both of its own. **19,755 hashes of B's own work destroyed**, against zero of the three adopted
-blocks.
+both of its own. **Both of B's blocks are destroyed and all three adopted blocks survive**, on every
+one of ten repeats. The *cost* shown in the stored run is 19,755 attempts, but one attempt count is a
+single draw from a geometric distribution (mean 16⁴ = 65,536 per block, so 131,072 expected for B's
+two), which makes that run a lucky one rather than a typical one: ten repeats of the unchanged code
+averaged **117,746** attempts for the same two blocks, and nine of the ten cost more. The destruction
+is structural; the count is a lottery.
 
 *Proven by:* `phase_demo.py`, `harness.py:837` (`exp_fork`), `results/fork_events.{csv,json}`,
 `results/wasted_work.{json,csv}`, `results/autosync.csv`, `charts/s5_fork_timeline.png`
@@ -144,6 +148,12 @@ validity as a claim to be tested rather than assumed:
 - **Falsification discipline.** Every fix was verified by reverting it, confirming the new test fails
   and the old ones still pass, restoring, and checking the file is byte-identical to the tested state.
   A test that has never failed proves nothing.
+- **Single draws are labelled as single draws.** An attempt count is one draw from a geometric
+  distribution (`attempts = nonce + 1`, `harness.py:412`), so a per-block count is a poor estimate of
+  cost and is never the only evidence for a figure: the ladder averages up to 300 blocks per level,
+  the microbenchmark runs 20,000 calls per size, the payload experiment 5 reps. The one headline
+  number that is a single draw — the work destroyed in `exp_wasted` — is stated as one, with ten
+  repeats beside it.
 
 Raw evidence is kept in `logs/`, and every figure above traces to a stored result file rather than to
 the presentation it came from.
@@ -197,7 +207,12 @@ Because the file is present at the path those four scripts expect, the repositor
 `requirements.txt` pins the five third-party packages the study imports — `flask` and `requests` for
 the HTTP interface, `matplotlib` and `numpy` for the figures, `pillow` for the screenshot crops — at
 the versions the stored results were produced with, so `pip install -r requirements.txt` reproduces
-the figures rather than merely re-running the code. Two of them are easy to forget because they are
+the pipeline rather than merely re-running it. It does not make every number reproducible, and the
+distinction is worth stating rather than implying: quantities averaged over trials (up to 300 blocks
+per ladder level, 20,000 calls per microbenchmark, 5 reps per payload size) come back inside their
+measured spread, whereas single-draw counts do not — `harness.py fork` reproduces all 13 steps and
+every `agree` value but not the block hashes, and `harness.py wasted` destroys the same two blocks
+for a different number of attempts each time. Two of them are easy to forget because they are
 imported by the scaffold and the chart scripts rather than by the harness: installing only the
 harness's own dependencies leaves `verify_format_check.py` failing on a missing `flask`.
 
